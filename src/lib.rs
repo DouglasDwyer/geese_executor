@@ -275,7 +275,7 @@ pub mod notify {
 }
 
 /// The set of events which this module raises.
-pub(super) mod on {
+mod on {
     use super::*;
 
     /// Instructs the event executor to start polling the provided future.
