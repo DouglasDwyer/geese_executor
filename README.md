@@ -1,7 +1,7 @@
 # geese_executor 
 
-[![Crates.io](https://img.shields.io/crates/v/geese.svg)](https://crates.io/crates/geese_executor)
-[![Docs.rs](https://docs.rs/geese/badge.svg)](https://docs.rs/geese_executor)
+[![Crates.io](https://img.shields.io/crates/v/geese_executor.svg)](https://crates.io/crates/geese_executor)
+[![Docs.rs](https://docs.rs/geese_executor/badge.svg)](https://docs.rs/geese_executor)
 
 Geese executor is a runtime for futures, integrated into the Geese event system. It
 provides the ability to perform asynchronous work and then send the results back via events.
