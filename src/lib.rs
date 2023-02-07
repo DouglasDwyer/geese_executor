@@ -236,7 +236,9 @@ impl GeeseSystem for GeeseExecutor {
     }
 }
 
-/// Provides the ability to customize how a future is executed.
+/// Provides the ability to customize how a future is executed. When
+/// an instance of this builder is dropped, the future is spawned
+/// on the executor's queue.
 pub struct FutureBuilder<'a> {
     /// The executor upon which the future will be spawned.
     executor: &'a GeeseExecutor,
@@ -272,7 +274,8 @@ pub mod notify {
     pub struct Poll;
 }
 
-pub mod on {
+/// The set of events which this module raises.
+pub(super) mod on {
     use super::*;
 
     /// Instructs the event executor to start polling the provided future.
