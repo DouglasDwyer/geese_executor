@@ -45,7 +45,7 @@
 //! }
 //! 
 //! let mut ctx = GeeseContext::default();
-//! ctx.raise_event(geese::notify::AddSystem::new::<A>());
+//! ctx.raise_event(geese::notify::add_system::<A>());
 //! ctx.flush_events();
 //! ctx.raise_event(geese_executor::notify::Poll);
 //! assert_eq!(Some(42), ctx.system::<A>().result);
@@ -198,12 +198,9 @@ impl GeeseExecutor {
         let mut ctx = Context::from_waker(&wake);
 
         let old_futures = take(&mut self.futures);
-        for mut future in old_futures {
-            if !future.cancellation.canceled() {
-                match Pin::new(&mut future.future).poll(&mut ctx) {
-                    Poll::Pending => { self.futures.push(future) },
-                    _ => {}
-                }
+        for mut future in old_futures.into_iter().filter(|x| !x.cancellation.canceled()) {
+            if Pin::new(&mut future.future).poll(&mut ctx).is_pending() {
+                self.futures.push(future);
             }
         }
     }
