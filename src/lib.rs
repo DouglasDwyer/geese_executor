@@ -245,8 +245,8 @@ pub struct FutureBuilder<'a> {
 
 impl<'a> FutureBuilder<'a> {
     /// Adds a cancellation token to this future.
-    pub fn with_cancellation(mut self, token: &CancellationToken) -> Self {
-        self.holder.get().expect("Future was already taken.").cancellation = (*token).clone();
+    pub fn with_cancellation(mut self, token: &CancellationTokenListener) -> Self {
+        self.holder.get().expect("Future was already taken.").cancellation = token.clone();
         self
     }
 }
