@@ -16,7 +16,6 @@ use geese_executor::*;
 
 struct A {
     cancellation: CancellationToken,
-    ctx: GeeseContextHandle,
     result: Option<i32>
 }
 
@@ -32,26 +31,27 @@ impl A {
 }
 
 impl GeeseSystem for A {
-    fn new(ctx: GeeseContextHandle) -> Self {
+    const DEPENDENCIES: Dependencies = dependencies()
+        .with::<GeeseExecutor>();
+
+    const EVENT_HANDLERS: EventHandlers<Self> = event_handlers()
+        .with(Self::handle_result);
+
+    fn new(ctx: GeeseContextHandle<Self>) -> Self {
         let cancellation = CancellationToken::default();
         let result = None;
 
-        ctx.system::<GeeseExecutor>().spawn_event(Self::do_background_work())
+        ctx.get::<GeeseExecutor>().spawn_event(Self::do_background_work())
             .with_cancellation(&cancellation);
 
-        Self { cancellation, ctx, result }
-    }
-
-    fn register(with: &mut GeeseSystemData<Self>) {
-        with.dependency::<GeeseExecutor>();
-
-        with.event(Self::handle_result);
+        Self { cancellation, result }
     }
 }
 
 let mut ctx = GeeseContext::default();
-ctx.raise_event(geese::notify::AddSystem::new::<A>());
-ctx.flush_events();
-ctx.raise_event(geese_executor::notify::Poll);
-assert_eq!(Some(42), ctx.system::<A>().result);
+ctx.flush(EventQueue::default()
+    .with(geese::notify::add_system::<A>())
+    .with(geese_executor::notify::Poll)
+);
+assert_eq!(Some(42), ctx.get::<A>().result);
 ```

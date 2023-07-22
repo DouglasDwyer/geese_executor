@@ -1,6 +1,6 @@
 [package]
 name = "geese_executor"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/DouglasDwyer/geese_executor"
@@ -11,5 +11,5 @@ Asynchronous executor with Geese event system integration.
 
 [dependencies]
 dummy-waker = "1.1.0"
-geese = "0.2.0"
+geese = "0.3.2"
 takecell = "0.1.1"
